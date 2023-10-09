@@ -40,16 +40,17 @@
           <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
         </span>
       </el-form-item>
-
-      <el-button :loading="loading" type="primary" style="width:50%;margin-bottom:30px;" @click.native.prevent="handleLogin">登 录</el-button>
-      <el-button :loading="loading" type="primary" style="width:40%;margin-bottom:30px;margin-left:65px" @click="$router.push('/register')">注册</el-button>
-
+        <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登 录</el-button>
+      <div style="text-align: right; margin: 0">
+        <el-button type="primary" style="width:100%;margin-bottom:30px;" @click="register">注 册</el-button>
+      </div>
     </el-form>
   </div>
 </template>
 
 <script>
 import { validUsername } from '@/utils/validate'
+import md5 from 'js-md5'
 
 export default {
   name: 'Login',
@@ -74,12 +75,16 @@ export default {
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '123456'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+      },
+      loginDate: {
+        username: '',
+        password: ''
       },
       loading: false,
       passwordType: 'password',
@@ -109,7 +114,9 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
+          this.loginDate.password = md5('AGNA/PCIXGPPPCHUSBXOTHERMXUSBUSBMXUSBDS' + this.loginForm.username + 'gpstng@xyz.newc' + this.loginForm.password)
+          this.loginDate.username = this.loginForm.username
+          this.$store.dispatch('user/login', this.loginDate).then(() => {
             this.$router.push({ path: this.redirect || '/' })
             this.loading = false
           }).catch(() => {
@@ -121,7 +128,7 @@ export default {
         }
       })
     },
-    goToRegister() {
+    register() {
       this.$refs.loginForm.validate(valid => {
         this.$router.push('/register')
       })

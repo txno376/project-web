@@ -16,13 +16,15 @@ export function getInfo(token) {
   })
 }
 
-export function registerUser(user) {
+export function registerUser(registerForm) {
   return request({
     url: '/user/register',
     method: 'post',
     params: {
-      phone: user.phone,
-      code: user.code
+      phone: registerForm.phone,
+      code: registerForm.code,
+      username: registerForm.username,
+      password: registerForm.password
     }
   })
 }
